@@ -3,6 +3,7 @@
 #               Harry Longwell
 # Created: 11/19/2015
 # Modified: 11/19/2015
+
 library(nnet)
 library(neuralnet)
 
@@ -56,4 +57,25 @@ names <- c('ratio_foreclose', 'inventory_measure','price_to_rent','sold_for_gain
 housing_dat = as.data.frame(cbind(ratio_foreclose, inventory_measure,price_to_rent,
                     sold_for_gain,increasing_in_value,pct_price_reduced,median_sold_price))
 colnames(housing_dat) <- names
+
+# Get the number of data point so we can split training and testing data
+num_data <- dim(median_sold_price)[1]
+training_size <- num_data * 0.8
+testing_size <- num_data * 0.2
+
+train_input <- housing_dat[num_data:(num_data + training_size),]
+
+train_input <- housing_dat[1:training_size,]
+test_input <- housing_dat[(training_size + 1):(training_size + testing_size),]
+
+model_nnet <- nnet(x=train_input[,1:6], hidden = 10, 
+                   y=train_input[,7], size=35,maxit = 10000, linout = TRUE, 
+                   trace = TRUE)
+
+
+
+
+
+
+
 
