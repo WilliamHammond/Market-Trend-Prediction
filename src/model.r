@@ -2,80 +2,62 @@
 # Contributers: William Hammond
 #               Harry Longwell
 # Created: 11/19/2015
-# Modified: 11/19/2015
+# Modified: 11/22/2015
 
 library(nnet)
-library(neuralnet)
+# Function that prepares the data to put into the neural network. We bind the 
+# data leaving the target variable in the right most column. Every column
+# corresponds to a different feature. 
+#
+# Input:
+#       dat = data set, last column must be th target variable
+#       sizeTrainging = The percent of the data we want to train on
+#       datanames = array of names that correspond to feature names
+#       shuffle = if TRUE shuffle rowise, if false leave in time order
+prepdata <- function(dat,dataNames,sizeTraining = 0.8,  shuffle = FALSE) {
+  # Set column names
+  colnames(dat) <- dataNames
+  # Shuffle row-wise if need be
+  if (shuffle == TRUE){
+    dat <- dat[sample(nrow(dat)),]
+  }
+  # Get the number of data points
+  num_data <- dim(dat)[1]
+  # Find training and testing size
+  training_size <- num_data * sizeTraining
+  testing_size <- num_data * (1 - sizeTraining)
+  # Divid training and testing set 
+  train_input <- dat[1:training_size,]
+  test_input <- dat[(training_size + 1):(training_size + testing_size),]
+  # Remove any row that has an NA in it
+  train_input <- train_input[complete.cases(train_input),]
+  test_input <- test_input[complete.cases(test_input),]
 
-data_path <- '../data/'
+  return (list(train_input, test_input)) 
+}
 
-## Load in response variables
+# Trains neural network, runs prediction and creates visualizations
+# Input:
+#       trainInput = training input
+#       shuffle = if TRUE change title to reflect the fact data is shuffled
+runmodel <- function (trainInput, testInput, shuffle = FALSE) {
+  model_nnet <- nnet(x=trainInput[,1:ncol(trainInput) - 1], hidden = 1000000000, 
+                     y=trainInput[,ncol(trainInput)], size=6,maxit = 10000, linout = TRUE, 
+                     trace = TRUE)
+  # Run Prediction
+  predicted <- predict(model_nnet, testInput, type = "raw")
+  # Compute Accuracy
+  accuracy=(((predicted-testInput)/testInput)*100)[,ncol(trainInput)]
 
-sold_for_gain <- read.csv( file = paste(data_path, 'County_PctOfHomesSellingForGain_AllHomes.csv', sep = ''))
-sold_for_gain <- sold_for_gain[sold_for_gain$Metro == 'Rochester',]
-sold_for_gain <- t(subset(sold_for_gain, select = X2010.10:X2015.09))
-
-increasing_in_value <- read.csv ( file = paste(data_path, 'County_PctOfHomesIncreasingInValues_AllHomes.csv', sep =''))
-increasing_in_value <- increasing_in_value[increasing_in_value$Metro == 'Rochester',]
-increasing_in_value <- increasing_in_value[increasing_in_value$RegionName == 'Monroe',]
-increasing_in_value <- t(subset(increasing_in_value, select = X2010.10:X2015.09))
-
-pct_price_reduced <-read.csv ( file = paste(data_path, 'County_PctOfListingsWithPriceReductions_AllHomes.csv', sep = ''))
-pct_price_reduced <- pct_price_reduced[pct_price_reduced$RegionName == 'Monroe',]
-pct_price_reduced <- pct_price_reduced[pct_price_reduced$State == 'NY',]
-pct_price_reduced <- t(subset(pct_price_reduced, select = X2010.10:X2015.09))
-
-median_pct_price_reduced <-read.csv ( file = paste(data_path, 'County_MedianPctOfPriceReduction_AllHomes.csv', sep = ''))
-median_pct_price_reduced <- median_pct_price_reduced[median_pct_price_reduced$RegionName == 'Monroe',]
-median_pct_price_reduced <- median_pct_price_reduced[median_pct_price_reduced$State == 'NY',]
-median_pct_price_reduced <- t(subset(median_pct_price_reduced, select = X2010.10:X2015.09))
-
-ratio_foreclose <- read.csv ( file = paste(data_path, 'County_HomesSoldAsForeclosures-Ratio_AllHomes.csv', sep = ''))
-ratio_foreclose <- ratio_foreclose [ratio_foreclose$RegionName == 'Monroe',]
-ratio_foreclose <- ratio_foreclose [ratio_foreclose$Metro == 'Rochester',]
-ratio_foreclose <- t(subset(ratio_foreclose, select = X2010.10:X2015.09))
-
-inventory_measure <- read.csv ( file = paste(data_path, 'InventoryMeasure_County_Public.csv', sep = ''))
-inventory_measure <- inventory_measure [inventory_measure$CountyName == 'Monroe',]
-inventory_measure <- inventory_measure [inventory_measure$Metro == 'Rochester',]
-inventory_measure <- t(subset(inventory_measure, select = X2010.10:X2015.09))
-
-price_to_rent = read.csv(file = paste(data_path, 'County_PriceToRentRatio_AllHomes.csv', sep = ''))
-price_to_rent <- price_to_rent[price_to_rent$RegionName == 'Monroe',]
-price_to_rent <- price_to_rent[price_to_rent$State == 'NY',]
-price_to_rent <- t(subset(price_to_rent, select = X2010.10:X2015.09))
-
-
-# Target Variable
-median_sold_price <- read.csv( file = paste(data_path, 'County_MedianSoldPrice_AllHomes.csv', sep = ''))
-median_sold_price <- median_sold_price[median_sold_price$Metro == 'Rochester',]
-median_sold_price <- median_sold_price[median_sold_price$RegionName == 'Monroe',]
-median_sold_price <- t(subset(median_sold_price, select = X2010.10:X2015.09))
-
-names <- c('ratio_foreclose', 'inventory_measure','price_to_rent','sold_for_gain',
-           'increasing_in_value', 'pct_price_reduced','median_sold_price' )
-housing_dat = as.data.frame(cbind(ratio_foreclose, inventory_measure,price_to_rent,
-                    sold_for_gain,increasing_in_value,pct_price_reduced,median_sold_price))
-colnames(housing_dat) <- names
-
-# Get the number of data point so we can split training and testing data
-num_data <- dim(median_sold_price)[1]
-training_size <- num_data * 0.8
-testing_size <- num_data * 0.2
-
-train_input <- housing_dat[num_data:(num_data + training_size),]
-
-train_input <- housing_dat[1:training_size,]
-test_input <- housing_dat[(training_size + 1):(training_size + testing_size),]
-
-model_nnet <- nnet(x=train_input[,1:6], hidden = 10, 
-                   y=train_input[,7], size=35,maxit = 10000, linout = TRUE, 
-                   trace = TRUE)
-
-
-
-
-
-
-
-
+  jpeg ("test.jpg")
+  plot(accuracy, ylim = c(-10,10), ylab = "Percent", 
+       xlab = "Year and Month (10/2014 - 09/2015)", title = "Accuracy of Prediction")
+  title (main = "Accuracy of Prediction For Future Dates")
+  dev.off()
+  
+  # jpeg ("RandomOrderAccuracy.jpg")
+  # plot(accuracy, ylim = c(-10,10), ylab = "Percent", 
+  #      xlab = "Year and Month", title = "Accuracy of Prediction")
+  # title (main = "Accuracy of Prediction General Case Monroe County")
+  # dev.off()  
+}
