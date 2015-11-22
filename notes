@@ -1,0 +1,20 @@
+Weight Decay - 
+Objective Function - Measure of the "goodness of a fit" and is the value of the fitting criteria and weight decay
+
+1)
+	6-6-1
+	49 - weights
+	Objective function - 1207418352
+	Error within +- -10
+	error function has strange curve to it 
+2)	Random Order
+	
+
+We have to make a design decision, if we train and test on one geographic location, our model is going to be inherently over fit and a non-general solution. But That 
+Seems to better fit the use case of real-estate data as the data is incredible geographic dependent. 
+
+We are working with very limited dataset, going to try all of new york 
+
+Dating cleaning - removing some NA values for certain year + month combos
+
+There seems to be time dependency on error, its hard to tell with limited data set

@@ -49,7 +49,7 @@ runmodel <- function (trainInput, testInput,  accuracyTitle, residualTitle, resu
   # Compute Accuracy
   accuracy <- (((predicted-testInput)/testInput)*100)[,ncol(trainInput)]
   # Find the range we want to limit the plot to
-  bounds <- max(ceiling(max(accuracy)),floor(min(accuracy))) 
+  bounds <- max(abs(ceiling(max(accuracy))),abs(floor(min(accuracy)))) 
   # Create name of the output file
   accuracy_file_name <- paste(resultPath,accuracyTitle, '.jpg', sep = "")
   # Plot and save accuracy
