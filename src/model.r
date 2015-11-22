@@ -40,24 +40,22 @@ prepdata <- function(dat,dataNames,sizeTraining = 0.8,  shuffle = FALSE) {
 # Input:
 #       trainInput = training input
 #       shuffle = if TRUE change title to reflect the fact data is shuffled
-runmodel <- function (trainInput, testInput, shuffle = FALSE) {
+runmodel <- function (trainInput, testInput,  accuracyTitle, residualTitle, resultPath) {
   model_nnet <- nnet(x=trainInput[,1:ncol(trainInput) - 1], hidden = 1000000000, 
                      y=trainInput[,ncol(trainInput)], size=6,maxit = 10000, linout = TRUE, 
                      trace = TRUE)
   # Run Prediction
   predicted <- predict(model_nnet, testInput, type = "raw")
   # Compute Accuracy
-  accuracy=(((predicted-testInput)/testInput)*100)[,ncol(trainInput)]
-
-  jpeg ("test.jpg")
-  plot(accuracy, ylim = c(-10,10), ylab = "Percent", 
-       xlab = "Year and Month (10/2014 - 09/2015)", title = "Accuracy of Prediction")
-  title (main = "Accuracy of Prediction For Future Dates")
+  accuracy <- (((predicted-testInput)/testInput)*100)[,ncol(trainInput)]
+  # Find the range we want to limit the plot to
+  bounds <- max(ceiling(max(accuracy)),floor(min(accuracy))) 
+  # Create name of the output file
+  accuracy_file_name <- paste(resultPath,accuracyTitle, '.jpg', sep = "")
+  # Plot and save accuracy
+  jpeg (accuracy_file_name)
+  plot(accuracy, ylim = c(-bounds,bounds), ylab = "Percent", 
+       xlab = "Year and Month (10/2014 - 09/2015)")
+  title (main = accuracyTitle)
   dev.off()
-  
-  # jpeg ("RandomOrderAccuracy.jpg")
-  # plot(accuracy, ylim = c(-10,10), ylab = "Percent", 
-  #      xlab = "Year and Month", title = "Accuracy of Prediction")
-  # title (main = "Accuracy of Prediction General Case Monroe County")
-  # dev.off()  
 }

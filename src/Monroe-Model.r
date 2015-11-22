@@ -1,6 +1,7 @@
 source('model.r')
 
 data_path <- '../data/'
+result_path <- '../results/Monroe/ '
 
 ## Load in response variables
 
@@ -52,4 +53,4 @@ prepared_data <- prepdata(housing_dat, names)
 training_input <- as.data.frame(prepared_data[1])
 testing_input <- as.data.frame(prepared_data[2])
 
-runmodel(training_input, testing_input)
+runmodel(training_input, testing_input, "Monroe-Future-Accuracy", "test", result_path)
