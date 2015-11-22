@@ -10,7 +10,7 @@
 source('model.r')
 
 data_path <- '../data/'
-result_path <- '../results/Monroe/ '
+result_path <- '../results/Monroe/'
 
 ## Load in response variables
 
