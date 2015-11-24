@@ -7,9 +7,9 @@
 # Description: This program loads in zillow data for monroe county and creates
 #              a neural network used to predict median market value based 
 #              off of measures of market health.
-source('model.r')
+source('Model-Functions.r')
 
-data_path <- '../data/'
+data_path <- '../data/county/'
 result_path <- '../results/Monroe/'
 
 ## Load in response variables
@@ -60,9 +60,13 @@ names <- c('ratio_foreclose', 'inventory_measure','price_to_rent','sold_for_gain
 # Bind all of the features into a dataframe 
 housing_dat = as.data.frame(cbind(ratio_foreclose, inventory_measure,price_to_rent,
                                   sold_for_gain,increasing_in_value,pct_price_reduced,median_sold_price))
+# Run PCA
+getpca(prepdata(housing_dat,names, normalization = "mm"), result_path, "PCA-Monroe-County-1")
+
 # Prepare training and testing data
-prepared_data <- prepdata(housing_dat, names)
+prepared_data <- prepdata(housing_dat, names, normalization = "z", split = TRUE)
 training_input <- as.data.frame(prepared_data[1])
 testing_input <- as.data.frame(prepared_data[2])
-# Run the model and save th eresults
+
+# Run the model and save the results
 runmodel(training_input, testing_input, "Monroe-Future-Accuracy", "test", result_path)

@@ -45,9 +45,9 @@ runmodel <- function (trainInput, testInput,  accuracyTitle, residualTitle, resu
                      y=trainInput[,ncol(trainInput)], size=6,maxit = 10000, linout = TRUE, 
                      trace = TRUE)
   # Run Prediction
-  predicted <- predict(model_nnet, testInput, type = "raw")
+  predicted <<- predict(model_nnet, testInput, type = "raw")
   # Compute Accuracy
-  accuracy <- (((predicted-testInput)/testInput)*100)[,ncol(trainInput)]
+  accuracy <- (((predicted-testInput[,ncol(trainInput)])/testInput[,ncol(trainInput)])*100)
   # Find the range we want to limit the plot to
   bounds <- max(abs(ceiling(max(accuracy))),abs(floor(min(accuracy)))) 
   # Create name of the output file
