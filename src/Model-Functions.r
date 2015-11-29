@@ -82,7 +82,7 @@ prepdata <- function(dat,dataNames,normalization = "n",sizeTraining = 0.8,  shuf
 #       trainInput = training input
 #       shuffle = if TRUE change title to reflect the fact data is shuffled
 runmodel <- function (trainInput, testInput,  accuracyTitle, residualTitle, resultPath) {
-  model_nnet <- nnet(x=as.data.frame(trainInput[,1:ncol(trainInput) - 1]), hidden = 10, 
+  model_nnet <- nnet(x=as.data.frame(trainInput[,1:ncol(trainInput) - 1]), hidden = 2, 
                      y=as.data.frame(trainInput[,ncol(trainInput)]), size=20,maxit = 10000, linout = TRUE, 
                      trace = TRUE, decay=1e-3)
   # Run Prediction
@@ -95,15 +95,13 @@ runmodel <- function (trainInput, testInput,  accuracyTitle, residualTitle, resu
   accuracy_file_name <- paste(resultPath,accuracyTitle, '.jpg', sep = "")
   # Plot and save accuracy
   jpeg (accuracy_file_name)
-  plot(accuracy, ylim = c(-bounds,bounds), ylab = "Percent", 
-       xlab = "Year and Month (10/2014 - 09/2015)")
+  plot(accuracy, ylim = c(-bounds,bounds), ylab = "Percent")
   title (main = accuracyTitle)
   dev.off()
   
   accuracy_file_name <- paste(resultPath,accuracyTitle,'-100','.jpg', sep = "")
   jpeg (accuracy_file_name)
-  plot(accuracy, ylim = c(-100,100), ylab = "Percent", 
-       xlab = "Year and Month (10/2014 - 09/2015)")
+  plot(accuracy, ylim = c(-100,100), ylab = "Percent")
   title (main = accuracyTitle)
   dev.off()
 }
