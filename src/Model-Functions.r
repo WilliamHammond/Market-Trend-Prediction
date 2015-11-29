@@ -10,12 +10,12 @@ library(nnet)
 #       dat = data set
 #       resultPath = Path to results folder
 #       pcaTitle = title to plot
-getpca <- function (dat, resultPath, pcaTitle) {
+getpca <- function (dat, resultPath, pcaTitle,names) {
   # Principle Component Analysis
   # Log transform
-  log.dat <- log(dat)
+  #log.dat <- log(dat)
   # Apply PCA
-  dat.pca <- prcomp(log.dat,
+  dat.pca <- prcomp(dat,
                     center = TRUE,
                     scale. = TRUE) 
   
@@ -28,8 +28,7 @@ getpca <- function (dat, resultPath, pcaTitle) {
   
   # Plot PCA
   jpeg(paste(resultPath,pcaTitle,".jpg", sep = ""))
-  plot(dat.pca, type = "l", xaxt = 'n', yaxt = 'n')
-  title ( main = pcaTitle)
+  plot(dat.pca, type = "l", main = pcaTitle)
   dev.off()
 }
 
@@ -78,7 +77,6 @@ prepdata <- function(dat,dataNames,normalization = "n",sizeTraining = 0.8,  shuf
     return (dat)
   }
 }
-
 # Trains neural network, runs prediction and creates visualizations
 # Input:
 #       trainInput = training input
@@ -98,6 +96,13 @@ runmodel <- function (trainInput, testInput,  accuracyTitle, residualTitle, resu
   # Plot and save accuracy
   jpeg (accuracy_file_name)
   plot(accuracy, ylim = c(-bounds,bounds), ylab = "Percent", 
+       xlab = "Year and Month (10/2014 - 09/2015)")
+  title (main = accuracyTitle)
+  dev.off()
+  
+  accuracy_file_name <- paste(resultPath,accuracyTitle,'-100','.jpg', sep = "")
+  jpeg (accuracy_file_name)
+  plot(accuracy, ylim = c(-100,100), ylab = "Percent", 
        xlab = "Year and Month (10/2014 - 09/2015)")
   title (main = accuracyTitle)
   dev.off()

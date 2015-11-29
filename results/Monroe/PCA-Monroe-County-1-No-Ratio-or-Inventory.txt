@@ -1,0 +1,15 @@
+Importance of components:
+                          PC1    PC2    PC3    PC4    PC5
+Standard deviation     1.6557 1.0594 0.8445 0.5089 0.4050
+Proportion of Variance 0.5483 0.2245 0.1426 0.0518 0.0328
+Cumulative Proportion  0.5483 0.7728 0.9154 0.9672 1.0000
+Standard deviations:
+[1] 1.6557386 1.0594182 0.8444810 0.5089276 0.4049784
+
+Rotation:
+                           PC1        PC2        PC3          PC4         PC5
+price_to_rent       -0.4541820  0.4265862 -0.3983489 -0.671004218 -0.05305095
+sold_for_gain        0.3857348  0.6491153 -0.2752167  0.273166001  0.52867208
+increasing_in_value  0.3997271 -0.5705361 -0.4172935 -0.417763338  0.40748829
+pct_price_reduced    0.4444526  0.2362867  0.6676475 -0.548275872  0.01645616
+median_sold_price    0.5362905  0.1238172 -0.3816895  0.001018749 -0.74254557
