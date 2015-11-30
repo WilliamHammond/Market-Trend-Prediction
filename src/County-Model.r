@@ -16,18 +16,36 @@ result_path <- '../results/Monroe/'
 
 sold_for_gain <- read.csv( file = paste(data_path, 'County_PctOfHomesSellingForGain_AllHomes.csv', sep = ''))
 sold_for_gain <- sold_for_gain[sold_for_gain$Metro == 'Rochester',]
+
+jpeg(paste(result_path,"Sold-For-Gain",".jpg", sep = ""))
+plot(t(subset(turnover, select = X2000.01:X2015.09)), ylab = "Percent",
+     main = "Sold For Gain", xlab = "01/2000 - 09/2015")
+dev.off()
+
 sold_for_gain <- t(subset(sold_for_gain, select = X2010.10:X2015.09))
 #sold_for_gain <- as.data.frame(approx(sold_for_gain, n = 500)$y)
 
 increasing_in_value <- read.csv ( file = paste(data_path, 'County_PctOfHomesIncreasingInValues_AllHomes.csv', sep =''))
 increasing_in_value <- increasing_in_value[increasing_in_value$Metro == 'Rochester',]
 increasing_in_value <- increasing_in_value[increasing_in_value$RegionName == 'Monroe',]
+
+jpeg(paste(result_path,"Increasing-In-Value",".jpg", sep = ""))
+plot(t(subset(increasing_in_value, select = X2000.01:X2015.09)), ylab = "Percent",
+     main = "Increasing In Value", xlab = "01/2000 - 09/2015")
+dev.off()
+
 increasing_in_value <- t(subset(increasing_in_value, select = X2010.10:X2015.09))
 #increasing_in_value <-as.data.frame(approx(increasing_in_value, n = 500)$y)
 
 pct_price_reduced <-read.csv ( file = paste(data_path, 'County_PctOfListingsWithPriceReductions_AllHomes.csv', sep = ''))
 pct_price_reduced <- pct_price_reduced[pct_price_reduced$RegionName == 'Monroe',]
 pct_price_reduced <- pct_price_reduced[pct_price_reduced$State == 'NY',]
+
+jpeg(paste(result_path,"Percent-Price-Reduced",".jpg", sep = ""))
+plot(t(subset(pct_price_reduced, select = X2000.01:X2015.09)), ylab = "Percent",
+     main = "Percent Price Reduced", xlab = "01/2000 - 09/2015")
+dev.off()
+
 pct_price_reduced <- t(subset(pct_price_reduced, select = X2010.10:X2015.09))
 #pct_price_reduced <- as.data.frame(approx(pct_price_reduced, n = 500)$y)
 
@@ -40,6 +58,12 @@ median_pct_price_reduced <- t(subset(median_pct_price_reduced, select = X2010.10
 ratio_foreclose <- read.csv ( file = paste(data_path, 'County_HomesSoldAsForeclosures-Ratio_AllHomes.csv', sep = ''))
 ratio_foreclose <- ratio_foreclose [ratio_foreclose$RegionName == 'Monroe',]
 ratio_foreclose <- ratio_foreclose [ratio_foreclose$Metro == 'Rochester',]
+
+jpeg(paste(result_path,"Ratio-Sold-AsForeclosure",".jpg", sep = ""))
+plot(t(subset(ratio_foreclose, select = X2000.01:X2015.09)), ylab = "Ratio",
+     main = "Ratio-Of Homes Sold As Foreclosure Resale", xlab = "01/2000 - 09/2015")
+dev.off()
+
 ratio_foreclose <- t(subset(ratio_foreclose, select = X2010.10:X2015.09))
 #ratio_foreclose <- as.data.frame(approx(ratio_foreclose, n = 500)$y)
 
