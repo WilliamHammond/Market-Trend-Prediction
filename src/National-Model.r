@@ -64,13 +64,13 @@ median_sold_price <- stack(median_sold_price)$values
 median_sold_price <- median_sold_price[(number_of_states*3):length(median_sold_price)]
 
 # Create array of columns names used for dataframe
-names <- c('ratio_foreclose', 'inventory_measure','price_to_rent','sold_for_gain',
-           'increasing_in_value', 'pct_price_reduced','median_sold_price' )
+names <- c('price_to_rent','inventory_measure','ratio_foreclosure','sold_for_gain',
+           'increasing_in_value', 'pct_price_reduced','median_sold_price','turnover' )
 # Bind all of the features into a dataframe 
-housing_dat = as.data.frame(cbind(ratio_foreclose, inventory_measure,price_to_rent,
-                                  sold_for_gain,increasing_in_value,pct_price_reduced,median_sold_price))
+housing_dat = as.data.frame(cbind(price_to_rent,inventory_measure,ratio_foreclose,
+                                  sold_for_gain,increasing_in_value,pct_price_reduced,median_sold_price, turnover))
 # Prepare training and testing data
-prepared_data <- prepdata(housing_dat, names,normalization = "z", shuffle = TRUE, split = TRUE)
+prepared_data <- prepdata(housing_dat, names,normalization = "z", shuffle = FALSE, split = TRUE, sizeTraining = 0.95)
 training_input <- as.data.frame(prepared_data[1])
 testing_input <- as.data.frame(prepared_data[2])
 # Run the model and save th eresults

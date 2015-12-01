@@ -82,9 +82,9 @@ prepdata <- function(dat,dataNames,normalization = "n",sizeTraining = 0.8,  shuf
 #       trainInput = training input
 #       shuffle = if TRUE change title to reflect the fact data is shuffled
 runmodel <- function (trainInput, testInput,  accuracyTitle, residualTitle, resultPath) {
-  model_nnet <- nnet(x=as.data.frame(trainInput[,1:ncol(trainInput) - 1]), hidden = 2, 
+  model_nnet <- nnet(x=as.data.frame(trainInput[,1:ncol(trainInput) - 1]), hidden = 1, 
                      y=as.data.frame(trainInput[,ncol(trainInput)]), size=20,maxit = 10000, linout = TRUE, 
-                     trace = TRUE, decay=1e-3)
+                     trace = TRUE)
   # Run Prediction
   predicted <- predict(model_nnet, testInput, type = "raw")
   # Compute Accuracy

@@ -16,36 +16,18 @@ result_path <- '../results/Monroe/'
 
 sold_for_gain <- read.csv( file = paste(data_path, 'County_PctOfHomesSellingForGain_AllHomes.csv', sep = ''))
 sold_for_gain <- sold_for_gain[sold_for_gain$Metro == 'Rochester',]
-
-jpeg(paste(result_path,"Sold-For-Gain",".jpg", sep = ""))
-plot(t(subset(turnover, select = X2000.01:X2015.09)), ylab = "Percent",
-     main = "Sold For Gain", xlab = "01/2000 - 09/2015")
-dev.off()
-
 sold_for_gain <- t(subset(sold_for_gain, select = X2010.10:X2015.09))
 #sold_for_gain <- as.data.frame(approx(sold_for_gain, n = 500)$y)
 
 increasing_in_value <- read.csv ( file = paste(data_path, 'County_PctOfHomesIncreasingInValues_AllHomes.csv', sep =''))
 increasing_in_value <- increasing_in_value[increasing_in_value$Metro == 'Rochester',]
 increasing_in_value <- increasing_in_value[increasing_in_value$RegionName == 'Monroe',]
-
-jpeg(paste(result_path,"Increasing-In-Value",".jpg", sep = ""))
-plot(t(subset(increasing_in_value, select = X2000.01:X2015.09)), ylab = "Percent",
-     main = "Increasing In Value", xlab = "01/2000 - 09/2015")
-dev.off()
-
 increasing_in_value <- t(subset(increasing_in_value, select = X2010.10:X2015.09))
 #increasing_in_value <-as.data.frame(approx(increasing_in_value, n = 500)$y)
 
 pct_price_reduced <-read.csv ( file = paste(data_path, 'County_PctOfListingsWithPriceReductions_AllHomes.csv', sep = ''))
 pct_price_reduced <- pct_price_reduced[pct_price_reduced$RegionName == 'Monroe',]
 pct_price_reduced <- pct_price_reduced[pct_price_reduced$State == 'NY',]
-
-jpeg(paste(result_path,"Percent-Price-Reduced",".jpg", sep = ""))
-plot(t(subset(pct_price_reduced, select = X2000.01:X2015.09)), ylab = "Percent",
-     main = "Percent Price Reduced", xlab = "01/2000 - 09/2015")
-dev.off()
-
 pct_price_reduced <- t(subset(pct_price_reduced, select = X2010.10:X2015.09))
 #pct_price_reduced <- as.data.frame(approx(pct_price_reduced, n = 500)$y)
 
@@ -82,6 +64,12 @@ price_to_rent <- t(subset(price_to_rent, select = X2010.10:X2015.09))
 turnover <- read.csv(file = paste(data_path, 'County_Turnover_AllHomes.csv', sep = ''))
 turnover <- turnover[turnover$RegionName == 'Monroe',]
 turnover <- turnover[turnover$State == 'NY',]
+
+jpeg(paste(result_path,"Turnover",".jpg", sep = ""))
+plot(t(subset(turnover, select = X2000.01:X2015.09)), ylab = "Turnover",
+     main = "Turnover", xlab = "01/2000 - 09/2015")
+dev.off()
+
 turnover <- t(subset(turnover, select = X2010.10:X2015.09))
 
 # sales <- read.csv(file = paste(data_path, 'Sales_County.csv', sep = ''))
@@ -97,11 +85,11 @@ median_sold_price <- t(subset(median_sold_price, select = X2010.10:X2015.09))
 #median_sold_price <- as.data.frame(approx(median_sold_price, n = 500)$y)
 
 # Create array of columns names used for dataframe
-names <- c('price_to_rent','turnover','sold_for_gain',
-           'increasing_in_value', 'pct_price_reduced','median_sold_price' )
+names <- c('price_to_rent','inventory_measure','ratio_foreclosure','sold_for_gain',
+           'increasing_in_value', 'pct_price_reduced','median_sold_price','turnover' )
 # Bind all of the features into a dataframe 
-housing_dat = as.data.frame(cbind(price_to_rent, turnover,
-                                  sold_for_gain,increasing_in_value,pct_price_reduced,median_sold_price))
+housing_dat = as.data.frame(cbind(price_to_rent,inventory_measure,ratio_foreclose,
+                                  sold_for_gain,increasing_in_value,pct_price_reduced,median_sold_price, turnover))
 # Run PCA
 getpca(prepdata(housing_dat,names, normalization = "mm"), result_path, "PCA-Monroe-County-1-turnover", names)
 
